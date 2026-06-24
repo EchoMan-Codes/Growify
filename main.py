@@ -105,6 +105,39 @@ def complete_task():
     print(f'     Total XP: {total_xp}')
 
 
+# ---- Delete Task ----
+def delete_task():
+    """Remove a task from the tasks list permanently."""
+    global total_xp
+
+    print('\n--- Delete a Task ---')
+
+    if not tasks:
+        print('No tasks to delete.')
+        return
+    
+    view_tasks()
+
+    choice = input('\nEnter task number to delete: ').strip()
+
+    if not choice.isdigit():
+        print('[!] Please enter a valid number.')
+        return
+    
+    index = int(choice) - 1
+
+    if index < 0 or index >= len(tasks):
+        print('[!] Invalid task number.')
+        return
+    
+    task = tasks.pop(index)
+    
+    # If deleted task was completed, remove its xp
+    if task.completed:
+        total_xp -= task.xp
+
+    print(f'\n[-] Task "{task.name}" deleted.' )
+
 # ---- Handle Choices ----
 def handle_choices(choice):
     """Process the user's menu selection."""
@@ -115,7 +148,7 @@ def handle_choices(choice):
     elif choice == "3":
         complete_task()
     elif choice == "4":
-        print("\n>> Delete Task (coming soon)")
+        delete_task()
     elif choice == "5":
         print("\n>> Add Study Session (coming soon)")
     elif choice == "6":
