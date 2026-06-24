@@ -181,6 +181,26 @@ def add_study_session():
     print(f'\n[+] Study session added: {subject} | {hours}h | {date}')
 
 
+# ---- View Study Sessions ----
+def view_study_session():
+    """Displays all study sessions and total hours"""
+    print('\n--- Your Study Sessions ---')
+
+    if not study_sessions:
+        print('  No study sessions yet. Add one from the menu.')
+        return
+    
+    total_hours = 0
+
+    for index, session in enumerate(study_sessions, start = 1):
+        sub = session['subject']
+        hrs = session['hours']
+        dt = session['date']
+        print(f'   {index}. {sub} | {hrs}h | {dt}')
+        total_hours += hrs
+    
+    print(f'\n   Total hours: {len(study_sessions)} session(s) | {total_hours}s studied')
+
 # ---- Handle Choices ----
 def handle_choices(choice):
     """Process the user's menu selection."""
@@ -195,7 +215,7 @@ def handle_choices(choice):
     elif choice == "5":
         add_study_session()
     elif choice == "6":
-        print("\n>> View Study Sessions (coming soon)")
+        view_study_session()
     elif choice == "7":
         print("\n>> View Dashboard (coming soon)")
     elif choice == "8":
