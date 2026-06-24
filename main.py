@@ -48,13 +48,28 @@ def add_task():
     print(f'\n[+] Task "{task.name} added! ({task.difficulty.capitalize()} - {task.xp} XP)')
 
 
+# ---- View Tasks ----
+def view_tasks():
+    """Display all tasks with their index number."""
+    print('\n--- Your Tasks ---')
+
+    if not tasks:
+        print('  No tasks yet. Add one from the menu.')
+        return
+    
+    for index, task in enumerate(task, start = 1):
+        print(f'   {index}.{task}')
+
+    print(f'\n   Total: {len(tasks)} taks(s)')
+    
+
 # ---- Handle Choices ----
 def handle_choices(choice):
     """Process the user's menu selection."""
     if choice == "1":
         add_task()
     elif choice == "2":
-        print("\n>> View Tasks (coming soon)")
+        view_tasks()
     elif choice == "3":
         print("\n>> Complete Task (coming soon)")
     elif choice == "4":
