@@ -61,7 +61,49 @@ def view_tasks():
         print(f'   {index}.{task}')
 
     print(f'\n   Total: {len(tasks)} taks(s)')
+
+
+# ---- Complete Task ----
+def complete_task():
+    """Mark a task as completed and award XP."""
+    global total_xp
+
+    print('\n--- Complete a Task ---')
+
+    if not tasks:
+        print('  No tasks to complete.')
+        return
     
+    # Show tasks so user can pick one
+    view_tasks()
+
+    choice = input('\nEnter task number to complete: ').strip()
+
+    # Validate: is it a number?
+    if not choice.isdigit():
+        print('[!] Please enter a valid number.')
+        return
+    
+    index = int(choice) - 1    # Convert to 0-based index
+
+    # Validate: is it in range?
+    if index < 0 or index >= len(tasks):
+        print('[!] Invalid task number.')
+        return
+    
+    task = tasks[index]
+
+    # Validate: is it already done?
+    if task.completed:
+        print(f'[!] "{task.name}" is already completed.')
+        return
+    
+    task.completed = True
+    total_xp += task.xp
+
+    print(f'\n[+] "{task.name}" completed! + {task.xp} XP earned!')
+    print(f'     Total XP: {total_xp}')
+
 
 # ---- Handle Choices ----
 def handle_choices(choice):
@@ -71,7 +113,7 @@ def handle_choices(choice):
     elif choice == "2":
         view_tasks()
     elif choice == "3":
-        print("\n>> Complete Task (coming soon)")
+        complete_task()
     elif choice == "4":
         print("\n>> Delete Task (coming soon)")
     elif choice == "5":
