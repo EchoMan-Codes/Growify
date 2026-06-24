@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from helpers import Task
+from helpers import Task, UserProfile
 
 # ---- Data Storage----
 tasks = []
@@ -201,6 +201,36 @@ def view_study_session():
     
     print(f'\n   Total hours: {len(study_sessions)} session(s) | {total_hours}s studied')
 
+
+# ---- View Dashboard ----
+def view_dashboard():
+    """Displays the full dashboard summary."""
+    print('\n' + '-' * 50)
+    print('           DASHBOARD')
+    print('-' * 50)
+
+    # User info
+    level = profile.get_level(total_xp)
+    print(f'  Name: {profile.name}')
+    print(f'  Level: {level}')
+    print(f'  XP: {total_xp} / {level * UserProfile.XP_PER_LEVEL}')
+
+    # Task stats
+    completed_count = 0
+    for task in tasks:
+        if task.completed:
+            completed_count += 1
+
+    print(f'\n Tasks:       {completed_count} completed / {len(tasks)} total')
+
+    # Study stats
+    total_hours = 0
+    for session in study_sessions:
+        total_hours += session['hours']
+
+    print(f'  Studying:   {total_hours}h across {len(study_sessions)} session(s)')
+    print('-' * 50)
+
 # ---- Handle Choices ----
 def handle_choices(choice):
     """Process the user's menu selection."""
@@ -217,7 +247,7 @@ def handle_choices(choice):
     elif choice == "6":
         view_study_session()
     elif choice == "7":
-        print("\n>> View Dashboard (coming soon)")
+        view_dashboard()
     elif choice == "8":
         print("\n>> Export CSV Report (coming soon)")
     elif choice == "9":
@@ -232,6 +262,15 @@ def handle_choices(choice):
 # ---- Main Program ----
 def main():
     """Main function that runs the Growify application."""
+    global profile
+
+    name = input('\nEnter your name: ').strip()
+    if not name:
+        name = 'Echo'
+    profile = UserProfile(name)
+    
+    print(f'\nHello, {profile.name}! Lets grow today.')
+
     running = True
 
     while running:

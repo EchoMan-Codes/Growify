@@ -23,3 +23,17 @@ class Task:
     def __str__(self):
         status = '[X]' if self.completed else '[ ]'
         return f' {status} {self.name} | {self.difficulty.capitalize()} | {self.xp} XP'
+    
+
+class UserProfile:
+    """Stores the user's name and calculations level from XP."""
+
+    XP_PER_LEVEL = 50   # Every 50 XP = 1 Level up
+
+    def __init__(self, name):
+        self.name = name
+
+    def get_level(self, total_xp):
+        """Calculate level based on total XP."""
+
+        return (total_xp // UserProfile.XP_PER_LEVEL) + 1
