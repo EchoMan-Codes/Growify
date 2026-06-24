@@ -1,5 +1,7 @@
 # Growify - Personal Learning Dashboard
 
+from datetime import datetime
+
 from helpers import Task
 
 # ---- Data Storage----
@@ -138,6 +140,47 @@ def delete_task():
 
     print(f'\n[-] Task "{task.name}" deleted.' )
 
+
+# ---- Study Session ----
+def add_study_session():
+    """Ask the user for study session details and save it."""
+    print('\n--- Add Study Session ---')
+
+    subject = input('Subject (e.g., Python, Math): ').strip()
+
+    if not subject:
+        print('[!] Subject cannot be empty.')
+        return
+    
+    hours_input = input('Hours studied: ').strip()
+
+    # Validate hours studied
+    try:
+        hours  = float(hours_input)
+    except ValueError:
+        print('[!] Hours must be greater than 0.')
+        return
+    
+    # Date: use today if user presses Enter
+    date_input = input('Date (YYYY-MM-DD) or press Enter for today: ').strip()
+
+    if date_input:
+        date = date_input
+    else:
+        date = datetime.now().strftime('%Y-%m-%d')
+
+    # Store as a dictionary
+    session = {
+        'subject': subject,
+        'hours': hours,
+        'date': date,
+    }
+
+    study_sessions.append(session)
+
+    print(f'\n[+] Study session added: {subject} | {hours}h | {date}')
+
+
 # ---- Handle Choices ----
 def handle_choices(choice):
     """Process the user's menu selection."""
@@ -150,7 +193,7 @@ def handle_choices(choice):
     elif choice == "4":
         delete_task()
     elif choice == "5":
-        print("\n>> Add Study Session (coming soon)")
+        add_study_session()
     elif choice == "6":
         print("\n>> View Study Sessions (coming soon)")
     elif choice == "7":
