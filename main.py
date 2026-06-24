@@ -3,6 +3,7 @@
 from datetime import datetime
 
 from helpers import Task, UserProfile
+from storage import save_data
 
 # ---- Data Storage----
 tasks = []
@@ -251,6 +252,7 @@ def handle_choices(choice):
     elif choice == "8":
         print("\n>> Export CSV Report (coming soon)")
     elif choice == "9":
+        save_data(profile, tasks, study_sessions, total_xp)
         print("\nGoodbye! Keep growing!")
         return False
     else:
