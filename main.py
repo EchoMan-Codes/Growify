@@ -1,8 +1,11 @@
 # Growify - Personal Learning Dashboard
 
-# ---- Data Storage (List of dictionaries) ----
+from helpers import Task
+
+# ---- Data Storage----
 tasks = []
 study_sessions = []
+total_xp = 0
 
 # ---- Main Menu ----
 def show_menu():
@@ -21,11 +24,35 @@ def show_menu():
     print('----------------------------')
 
 
+# ---- Add Task ----
+def add_task():
+    """Ask the user for task details and add it to the tasks list."""
+    print('\n--- Add New Task ---')
+
+    name = input('Task name: ').strip()
+
+    if not name:
+        print('[!] Task name cannot be empty.')
+        return
+
+    print('Difficulty options: Easy, Medium, Hard')
+    difficulty = input('Difficulty: ').strip().lower()
+
+    if difficulty not in ['easy', 'medium', 'hard']:
+        print('[!] Invalid difficulty. Using "easy" as default.')
+        difficulty = 'easy'
+
+    task = Task(name, difficulty)
+    tasks.append(task)
+
+    print(f'\n[+] Task "{task.name} added! ({task.difficulty.capitalize()} - {task.xp} XP)')
+
+
 # ---- Handle Choices ----
 def handle_choices(choice):
     """Process the user's menu selection."""
     if choice == "1":
-        print("\n>> Add Task (coming soon)")
+        add_task()
     elif choice == "2":
         print("\n>> View Tasks (coming soon)")
     elif choice == "3":
