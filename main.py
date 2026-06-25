@@ -25,8 +25,7 @@ def show_menu():
     print("│  [2] View Tasks        [6] View Study Sessions   │")
     print("│  [3] Complete Task     [7] View Dashboard        │")
     print("│  [4] Delete Task       [8] Export CSV Report     │")
-    print("│                                                  │")
-    print("│  [9] Exit                                        │")
+    print("│  [9] Edit Profile      [0] Exit                  │")
     print("╰──────────────────────────────────────────────────╯\n")
 
 
@@ -307,6 +306,21 @@ def export_csv_report():
         print(f'\n[!] Could not export CSV: {error}')
 
 
+# ---- Edit Profile ----
+def edit_profile():
+    """Allow the user to change their profile name."""
+    print("\n👤 Edit Profile")
+    print("─────────────────────────")
+    
+    new_name = input(f"➤ Enter new name (Current: {profile.name}): ").strip()
+    
+    if new_name:
+        profile.name = new_name
+        print(f"\n[+] Name updated to '{profile.name}'!")
+    else:
+        print("\n[!] Name cannot be empty. No changes made.")
+
+
 # ---- Handle Choices ----
 def handle_choices(choice):
     """Process the user's menu selection."""
@@ -327,11 +341,13 @@ def handle_choices(choice):
     elif choice == "8":
         export_csv_report()
     elif choice == "9":
+        edit_profile()
+    elif choice == "0":
         save_data(profile, tasks, study_sessions, total_xp)
         print("\nGoodbye! Keep growing!")
         return False
     else:
-        print("\n[!] Invalid choice. Please enter a number from 1 to 9.")
+        print("\n[!] Invalid choice. Please enter a number from 0 to 9.")
 
     input("\nPress Enter to continue...")
     return True
