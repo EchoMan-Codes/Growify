@@ -1,6 +1,8 @@
 # Growify - Personal Learning Dashboard
 
+import csv
 from datetime import datetime
+import os
 
 from helpers import Task, UserProfile
 from storage import load_data, restore_tasks, save_data
@@ -61,7 +63,7 @@ def view_tasks():
         print('  No tasks yet. Add one from the menu.')
         return
     
-    for index, task in enumerate(task, start = 1):
+    for index, task in enumerate(tasks, start = 1):
         print(f'   {index}.{task}')
 
     print(f'\n   Total: {len(tasks)} taks(s)')
@@ -213,9 +215,16 @@ def view_dashboard():
 
     # User info
     level = profile.get_level(total_xp)
+    xp_target = level * UserProfile.XP_PER_LEVEL
+    xp_progress = total_xp % UserProfile.XP_PER_LEVEL
+    
+    # Calculate bar length (20 chars total)
+    bar_length = int((xp_progress / UserProfile.XP_PER_LEVEL) * 20)
+    bar = "#" * bar_length + "-" * (20 - bar_length)
+
     print(f'  Name: {profile.name}')
     print(f'  Level: {level}')
-    print(f'  XP: {total_xp} / {level * UserProfile.XP_PER_LEVEL}')
+    print(f'  XP: {total_xp} / {xp_target} [{bar}]')
 
     # Task stats
     completed_count = 0
@@ -232,6 +241,61 @@ def view_dashboard():
 
     print(f'  Studying:   {total_hours}h across {len(study_sessions)} session(s)')
     print('-' * 50)
+
+
+# ---- CSV Report ----
+def export_csv_report():
+    """Export tasks and study sessions to a CSV file."""
+    report_file = os.path.join("data", "report.csv")
+    try:
+        with open(report_file, "w", newline="") as file:
+            writer = csv.writer(file)
+
+        # Section 1: Tasks
+            writer.writerow(["=== TASKS ==="])
+            writer.writerow(["Name", "Difficulty", "Status", "XP", "Date Created"])
+
+            for task in tasks:
+                status = "Completed" if task.completed else "Pending"
+                writer.writerow([
+                    task.name,
+                    task.difficulty.capitalize(),
+                    status,
+                    task.xp,
+                    task.date_created,
+                ])
+
+            # Blank row between sections
+            writer.writerow([])
+
+            # Section 2: Study Sessions
+            writer.writerow(["=== STUDY SESSIONS ==="])
+            writer.writerow(["Subject", "Hours", "Date"])
+
+            for session in study_sessions:
+                writer.writerow([
+                    session["subject"],
+                    session["hours"],
+                    session["date"],
+                ])
+
+            # Blank row then summary
+            writer.writerow([])
+            writer.writerow(["=== SUMMARY ==="])
+
+            level = profile.get_level(total_xp)
+            completed_count = sum(1 for t in tasks if t.completed)
+            total_hours = sum(s["hours"] for s in study_sessions)
+
+            writer.writerow(["Total XP", total_xp])
+            writer.writerow(["Level", level])
+            writer.writerow(["Tasks Completed", f"{completed_count}/{len(tasks)}"])
+            writer.writerow(["Total Study Hours", total_hours])
+
+        print(f"\n[+] CSV report exported to: {report_file}")
+    except (IOError, OSError):
+        print(f'\n[!] Could not export CSV: {os.error}')
+
 
 # ---- Handle Choices ----
 def handle_choices(choice):
@@ -251,7 +315,7 @@ def handle_choices(choice):
     elif choice == "7":
         view_dashboard()
     elif choice == "8":
-        print("\n>> Export CSV Report (coming soon)")
+        export_csv_report()
     elif choice == "9":
         save_data(profile, tasks, study_sessions, total_xp)
         print("\nGoodbye! Keep growing!")
@@ -286,10 +350,14 @@ def main():
 
     running = True
 
-    while running:
-        show_menu()
-        choice = input('\nEnter your choice (1-9): ')
-        running = handle_choices(choice)
+    try:
+        while running:
+            show_menu()
+            choice = input('\nEnter your choice (1-9): ')
+            running = handle_choices(choice)
+    except KeyboardInterrupt:
+        print("\n\n[!] Interrupted by user (Ctrl+C). Saving data and exiting...")
+        save_data(profile, tasks, study_sessions, total_xp)
 
 if __name__ == '__main__':
     main()
