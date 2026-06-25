@@ -3,6 +3,8 @@
 
 import json, os
 
+from helpers import Task
+
 DATA_FILE = os.path.join('data', 'growify_date.json')
 
 def save_data(profile, tasks, study_sessions, total_xp):
@@ -35,3 +37,32 @@ def save_data(profile, tasks, study_sessions, total_xp):
         json.dump(data, file, indent = 4)
 
     print('[*] Data saved successfully.')
+
+
+def load_data():
+    """Load app data from the JSON file"""
+
+    if not os.path.exists(DATA_FILE):
+        return None
+    
+    try:
+        with open(DATA_FILE, 'r') as file:
+            data = json.load(file)
+    except (json.JSONDecodeError, ValueError):
+        print('[!] Save file is corrupted. Starting fresh.')
+        return None
+    
+    return data
+
+def restore_tasks(tasks_data):
+    """Converts a list of task dictionarires back into Task object."""
+
+    tasks = []
+
+    for item in tasks_data:
+        task = Task(item['name'], item['difficulty'])
+        task.completed = item['completed']
+        task.data_created = item['date_created']
+        tasks.append(task)
+
+    return tasks

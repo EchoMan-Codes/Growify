@@ -3,12 +3,13 @@
 from datetime import datetime
 
 from helpers import Task, UserProfile
-from storage import save_data
+from storage import load_data, restore_tasks, save_data
 
 # ---- Data Storage----
 tasks = []
 study_sessions = []
 total_xp = 0
+profile = None
 
 # ---- Main Menu ----
 def show_menu():
@@ -264,7 +265,17 @@ def handle_choices(choice):
 # ---- Main Program ----
 def main():
     """Main function that runs the Growify application."""
-    global profile
+    global profile, tasks, study_sessions, total_xp
+
+    saved = load_data()
+
+    if saved:
+        profile = UserProfile(saved['profile']['name'])
+        tasks = restore_tasks(saved['tasks'])
+        study_sessions = saved['study_sessions']
+        total_xp = saved['total_xp']
+        print(f'\nWelcome back, {profile.name}!')
+        print(f'  Level {profile.get_level(total_xp)} | {total_xp} XP | {len(tasks)} task(s)')
 
     name = input('\nEnter your name: ').strip()
     if not name:
