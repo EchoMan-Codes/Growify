@@ -2,6 +2,7 @@
 # Contains Task class and utility functions
 
 from datetime import datetime
+import os
 
 # XP reward for each difficulty level
 XP_TABLE = {
@@ -9,6 +10,11 @@ XP_TABLE = {
     'medium': 20,
     'hard': 30,
 }
+
+def clear_screen():
+    """Clear the terminal screen."""
+    # 'cls' for Windows, 'clear' for macOS and Linux
+    os.system("cls" if os.name == "nt" else "clear")
 
 class Task:
     """Represents a single task in GROWIFY."""

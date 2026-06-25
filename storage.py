@@ -34,11 +34,12 @@ def save_data(profile, tasks, study_sessions, total_xp):
 
     # Write to JSON file
     try:
+        os.makedirs('data', exist_ok=True)
         with open(DATA_FILE, 'w') as file:
             json.dump(data, file, indent = 4)
         print('[*] Data saved successfully.')
-    except (IOError, ValueError):
-        print(f'[!] Could not save data: {os.error}')
+    except (IOError, ValueError) as error:
+        print(f'[!] Could not save data: {error}')
 
 
 def load_data():

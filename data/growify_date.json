@@ -1,0 +1,23 @@
+{
+    "profile": {
+        "name": "Echo"
+    },
+    "tasks": [
+        {
+            "name": "Start Learning Flask",
+            "difficulty": "medium",
+            "completed": false,
+            "xp": 20,
+            "date_created": "2026-06-25"
+        },
+        {
+            "name": "Continue JP",
+            "difficulty": "hard",
+            "completed": false,
+            "xp": 30,
+            "date_created": "2026-06-25"
+        }
+    ],
+    "study_sessions": [],
+    "total_xp": 0
+}
